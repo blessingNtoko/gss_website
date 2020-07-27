@@ -1,1 +1,10 @@
-<p>contact works!</p>
+<h1>Contact Us</h1>
+<div class="contacting">
+  <input [(ngModel)]="email" type="text" placeholder="Email(optional)" maxlength="120">
+  <br />
+  <input [(ngModel)]="name" type="text" placeholder="Name*" maxlength="50" required>
+  <br />
+  <textarea [(ngModel)]="message" placeholder="Message*" maxlength="480" required></textarea>
+  <br />
+  <button type="button" (click)="submitMsg()">Send</button>
+</div>
