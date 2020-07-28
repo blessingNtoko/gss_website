@@ -8,7 +8,7 @@ import { HttpHeaders } from '@angular/common/http';
 })
 export class HttpService {
 
-  private url = 'http://localhost:3000/contact';
+  private url = 'http://localhost:3000/';
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -20,11 +20,42 @@ export class HttpService {
   public postHttp(data) {
     console.log('Data to post ->', data);
     let temp = {
-      type: 'Message',
-      data: data
+      email: data['email'],
+      name: data['name'],
+      message: data['message']
     }
-    return this.http.post(this.url, temp, this.httpOptions).subscribe(data => {
+
+    let toJSON = JSON.stringify(temp);
+    console.log('Message Object in JSON ->', toJSON)
+
+    let toBase64 = btoa(toJSON);
+
+    let encrypted = this.encryptMsg(toBase64);
+    console.log('Encrypted message ->', encrypted);
+
+    let tempObj = {
+      type: 'message',
+      data: encrypted,
+      _id: this.getUID()
+    }
+
+    return this.http.post(this.url + data['endpoint'], tempObj, this.httpOptions).subscribe(data => {
       console.log('Subscribe ->', data);
     });
+  }
+
+  public getHttp(media: string) {
+    return this.http.get(this.url + 'media/' + media, {
+      observe: 'response',
+      responseType: 'text'
+    });
+  }
+
+  private getUID() {
+    return Math.random().toString(36).substring(2) + Date.now().toString(36);
+  }
+
+  private encryptMsg(msg) {
+    return msg;
   }
 }

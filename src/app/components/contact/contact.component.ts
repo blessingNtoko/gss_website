@@ -31,29 +31,14 @@ export class ContactComponent implements OnInit {
     if (this.name && this.message) {
       msgObj['name'] = this.name;
       msgObj['message'] = this.message;
-      msgObj['_id'] = this.getUID();
+      msgObj['endpoint'] = 'contact';
 
       console.log('Message Object ->', msgObj)
 
-      let toJSON = JSON.stringify(msgObj);
-      console.log('Message Object in JSON ->', toJSON)
-
-      // let toBase64 = btoa(toJSON);
-
-      let encrypted = this.encryptMsg(toJSON);
-      console.log('Encrypted message ->', encrypted);
-      this.httpServe.postHttp(encrypted);
+      this.httpServe.postHttp(msgObj);
     } else {
       console.log('Please fill in all required parts of form')
     }
-  }
-
-  private getUID() {
-    return Math.random().toString(36).substring(2) + Date.now().toString(36);
-  }
-
-  private encryptMsg(msg) {
-    return msg;
   }
 
 }
