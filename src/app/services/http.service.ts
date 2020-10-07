@@ -8,6 +8,8 @@ import { HttpHeaders } from '@angular/common/http';
 })
 export class HttpService {
 
+  public imageArr;
+
   private url = 'http://localhost:3000/';
   private httpOptions = {
     headers: new HttpHeaders({
