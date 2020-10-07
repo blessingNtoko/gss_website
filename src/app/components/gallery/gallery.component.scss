@@ -1,4 +1,13 @@
 img {
   width: 30%;
   height: 30%;
+  margin-bottom: 2px;
+}
+
+.images {
+  display: flex;
+  // flex-direction: row;
+  // flex-wrap: wrap;
+  // justify-content: center;
+  // align-items: center;
 }
