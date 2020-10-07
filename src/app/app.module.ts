@@ -12,6 +12,13 @@ import { ContactComponent } from './components/contact/contact.component';
 import { DonateComponent } from './components/donate/donate.component';
 import { GalleryComponent } from './components/gallery/gallery.component';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = {
+  url: 'http://localhost:3000',
+  options: {}
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,6 +30,7 @@ import { GalleryComponent } from './components/gallery/gallery.component';
   ],
   imports: [
     BrowserModule,
+    SocketIoModule.forRoot(config),
     FormsModule,
     HttpClientModule,
     AppRoutingModule,

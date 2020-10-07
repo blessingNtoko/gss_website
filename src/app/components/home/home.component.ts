@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../services/http.service';
-
+import { SocketService } from '../../services/socket.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -9,21 +9,19 @@ import { HttpService } from '../../services/http.service';
 export class HomeComponent implements OnInit {
 
   constructor(
-    private httpServe: HttpService
+    private httpServe: HttpService,
+    private socket: SocketService
   ) { }
 
   ngOnInit(): void {
 
-    try {
-      this.httpServe.getHttp('images').subscribe(data => {
-        console.log('Subscribe in gallery ->', data);
+    this.socket.getImages();
+    this.socket.gotImages().subscribe(data => {
+      console.log("from socket ->", data);
 
-        this.httpServe.imageArr = JSON.parse(data['body']);
-        console.log(this.httpServe.imageArr);
-      });
-    } catch (error) {
-      console.log('Error on Init ->', error);
-    }
+      this.httpServe.imageArr.push(data);
+    });
+
   }
 
 }

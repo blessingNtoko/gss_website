@@ -8,7 +8,7 @@ import { HttpHeaders } from '@angular/common/http';
 })
 export class HttpService {
 
-  public imageArr;
+  public imageArr = [];
 
   private url = 'http://localhost:3000/';
   private httpOptions = {
@@ -49,7 +49,7 @@ export class HttpService {
   public getHttp(media: string) {
     return this.http.get(this.url + 'media/' + media, {
       observe: 'response',
-      responseType: 'text'
+      responseType: 'arraybuffer'
     });
   }
 
