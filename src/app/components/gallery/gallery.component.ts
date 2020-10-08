@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { SocketService } from '../../services/socket.service';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-gallery',
@@ -11,41 +12,52 @@ export class GalleryComponent implements OnInit {
 
   private gotImages = false;
   private tempArray = [];
+  private trustedUrl: SafeResourceUrl;
 
 
   constructor(
     public httpServe: HttpService,
-    private socket: SocketService
+    private socket: SocketService,
+    private sanitize: DomSanitizer
   ) { }
 
   ngOnInit(): void {
     this.socket.getImages();
 
     this.socket.gotImages().subscribe(data => {
-      // console.log("from socket ->", typeof (data));
       let reader = new FileReader();
 
       if (typeof (data) === "string") {
         let result = this.mergeArrays(this.tempArray);
+        // let imgTag = document.getElementById("images");
 
         let resultBlob = new Blob(result, { type: "image/png" });
         console.log("Blob ->", resultBlob);
-        // let blobURL = URL.createObjectURL(resultBlob);
+        let blobURL = URL.createObjectURL(resultBlob);
+
+        this.trustedUrl = this.sanitize.bypassSecurityTrustResourceUrl(blobURL);
+
+        console.log(this.trustedUrl);
+
+
+        this.httpServe.imageArr.push(this.trustedUrl);
+
+
+        // console.log(newImage);
+
+        // reader.onload = () => {
+        //   let temp: any = reader.result;
+        //   console.log("Reader Result ->", temp);
 
         // let newImage = new Image();
-        // newImage.src
+        // newImage.src = temp;
 
-        reader.onload = () => {
-          let temp: any = reader.result;
-          console.log("Reader Result ->", temp);
+        // imgTag.appendChild(newImage);
+        // console.log(this.httpServe.imageArr);
+        // }
+        // reader.readAsDataURL(resultBlob);
 
-          this.httpServe.imageArr.push(reader.result);
 
-        }
-        reader.readAsDataURL(resultBlob);
-
-        // let base64 = this.toBase64(result);
-        // console.log("Result ->", base64);
       } else {
         let temp: any = data;
 
