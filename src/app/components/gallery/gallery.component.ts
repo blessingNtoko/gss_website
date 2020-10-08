@@ -10,20 +10,41 @@ import { SocketService } from '../../services/socket.service';
 export class GalleryComponent implements OnInit {
 
   private gotImages = false;
+  private tempArray = [];
 
 
   constructor(
+    private httpServe: HttpService,
     private socket: SocketService
   ) { }
 
   ngOnInit(): void {
-  //   if (!this.gotImages) {
-  //     this.socket.gotImages().subscribe(data => {
-  //       console.log("from socket ->", data);
-  //       this.gotImages = true;
-  //       this.httpServe.imageArr.push(data);
-  //     });
-  //   }
-  // }
+    this.socket.getImages();
+
+    this.socket.gotImages().subscribe(data => {
+      console.log("from socket ->", typeof(data));
+
+      if (typeof(data) === "string") {
+        let result = this.mergeArrays(this.tempArray);
+        console.log("Result ->", result);
+      } else {
+        let temp: any = data;
+
+        let uint8 = new Uint8Array(temp);
+        this.tempArray.push(uint8);
+      }
+
+
+      // this.httpServe.imageArr.push(data);
+    });
+  }
+
+  private mergeArrays(arrays) {
+    let result = [];
+    arrays.forEach(array => {
+      result.push(...array);
+    });
+    return result;
+  }
 
 }
