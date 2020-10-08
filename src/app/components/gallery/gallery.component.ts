@@ -10,7 +10,6 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browse
 })
 export class GalleryComponent implements OnInit {
 
-  private gotImages = false;
   private tempArray = [];
   private trustedUrl: SafeResourceUrl;
 
@@ -33,29 +32,29 @@ export class GalleryComponent implements OnInit {
 
         let resultBlob = new Blob(result, { type: "image/png" });
         console.log("Blob ->", resultBlob);
-        let blobURL = URL.createObjectURL(resultBlob);
+        // let blobURL = URL.createObjectURL(resultBlob);
 
-        this.trustedUrl = this.sanitize.bypassSecurityTrustResourceUrl(blobURL);
+        // this.trustedUrl = this.sanitize.bypassSecurityTrustResourceUrl(blobURL);
 
-        console.log(this.trustedUrl);
+        // console.log(this.trustedUrl);
 
 
-        this.httpServe.imageArr.push(this.trustedUrl);
 
 
         // console.log(newImage);
 
-        // reader.onload = () => {
-        //   let temp: any = reader.result;
-        //   console.log("Reader Result ->", temp);
+        reader.onload = () => {
+          let temp: any = reader.result;
+          console.log("Reader Result ->", temp);
+          this.httpServe.imageArr.push(temp);
 
-        // let newImage = new Image();
-        // newImage.src = temp;
+          // let newImage = new Image();
+          // newImage.src = temp;
 
-        // imgTag.appendChild(newImage);
-        // console.log(this.httpServe.imageArr);
-        // }
-        // reader.readAsDataURL(resultBlob);
+          // imgTag.appendChild(newImage);
+          // console.log(this.httpServe.imageArr);
+        }
+        reader.readAsDataURL(resultBlob);
 
 
       } else {
