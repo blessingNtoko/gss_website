@@ -22,20 +22,25 @@ export class GalleryComponent implements OnInit {
     this.socket.getImages();
 
     this.socket.gotImages().subscribe(data => {
-      console.log("from socket ->", typeof(data));
+      // console.log("from socket ->", typeof (data));
       let reader = new FileReader();
 
-      if (typeof(data) === "string") {
+      if (typeof (data) === "string") {
         let result = this.mergeArrays(this.tempArray);
 
-        let resultBlob = new Blob(result);
+        let resultBlob = new Blob(result, { type: "image/png" });
+        console.log("Blob ->", resultBlob);
+        // let blobURL = URL.createObjectURL(resultBlob);
+
+        // let newImage = new Image();
+        // newImage.src
 
         reader.onload = () => {
-          console.log("Reader Result ->", reader.result);
-          // let image = new Image();
-          // image.src = reader.result;
+          let temp: any = reader.result;
+          console.log("Reader Result ->", temp);
 
           this.httpServe.imageArr.push(reader.result);
+
         }
         reader.readAsDataURL(resultBlob);
 
