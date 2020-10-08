@@ -8,6 +8,8 @@ import { SocketService } from '../../services/socket.service';
 })
 export class HomeComponent implements OnInit {
 
+  private gotImages = false;
+
   constructor(
     private httpServe: HttpService,
     private socket: SocketService
@@ -16,11 +18,13 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
 
     this.socket.getImages();
-    this.socket.gotImages().subscribe(data => {
-      console.log("from socket ->", data);
-
-      this.httpServe.imageArr.push(data);
-    });
+    if (!this.gotImages) {
+      this.socket.gotImages().subscribe(data => {
+        console.log("from socket ->", data);
+        this.gotImages = true;
+        this.httpServe.imageArr.push(data);
+      });
+    }
 
   }
 
