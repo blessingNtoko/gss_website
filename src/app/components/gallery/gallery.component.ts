@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { SocketService } from '../../services/socket.service';
-import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-gallery',
@@ -10,14 +9,10 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browse
 })
 export class GalleryComponent implements OnInit {
 
-  private tempArray = [];
-  private trustedUrl: SafeResourceUrl;
-
 
   constructor(
     public httpServe: HttpService,
     private socket: SocketService,
-    private sanitize: DomSanitizer
   ) { }
 
   ngOnInit(): void {
