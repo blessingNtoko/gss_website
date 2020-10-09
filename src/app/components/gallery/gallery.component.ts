@@ -38,8 +38,4 @@ export class GalleryComponent implements OnInit {
     return result;
   }
 
-  private toBase64(uint8) {
-    return btoa(String.fromCharCode.apply(null, uint8));
-  }
-
 }
