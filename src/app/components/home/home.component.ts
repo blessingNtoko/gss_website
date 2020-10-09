@@ -17,17 +17,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // this.socket.getImages();
-    // if (this.gotImages) {
-    //   console.log("Already got them");
-    // } else {
-    //     this.socket.gotImages().subscribe(data => {
-    //       console.log("from socket ->", data);
-    //       this.gotImages = true;
-    //       this.httpServe.imageArr.push(data);
-    //     });
-
-    // }
+    this.httpServe.imageArr = [];
+    console.log(this.httpServe.imageArr);
 
   }
 
