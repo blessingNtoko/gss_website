@@ -10,8 +10,8 @@ export class SocketService {
     private socket: Socket
   ) { }
 
-  getImages() {
-    this.socket.emit("imagesPls");
+  getMedia(media) {
+    this.socket.emit(media);
   }
 
   gotImages() {
