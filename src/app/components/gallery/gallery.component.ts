@@ -17,8 +17,8 @@ export class GalleryComponent implements OnInit {
 
   ngOnInit(): void {
     // this.socket.getMedia("images");
-    this.socket.getMedia("audio");
-    // this.socket.getMedia("video");
+    // this.socket.getMedia("audio");
+    this.socket.getMedia("video");
 
     this.socket.gotImages().subscribe(data => {
       console.log("Data ->", data);
