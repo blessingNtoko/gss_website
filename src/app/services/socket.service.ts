@@ -10,11 +10,24 @@ export class SocketService {
     private socket: Socket
   ) { }
 
-  getMedia(media) {
+  getMedia(media: string, clip?: string) {
+    if (clip) {
+      console.log("Clip ->", clip);
+      this.socket.emit(media, clip);
+    }
+
     this.socket.emit(media);
   }
 
   gotImages() {
-    return this.socket.fromEvent("gotImages");
+    return this.socket.fromEvent("images");
+  }
+
+  gotAudio() {
+    return this.socket.fromEvent("audioChunk");
+  }
+
+  gotVideo() {
+    return this.socket.fromEvent("videoChunk");
   }
 }
