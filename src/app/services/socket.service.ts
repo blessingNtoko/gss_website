@@ -6,41 +6,63 @@ import { Socket } from 'ngx-socket-io';
 })
 export class SocketService {
 
-  private uid: any;
+  public imageUID: any;
+  public audioUID: any;
+  public videoUID: any;
 
   constructor(
     private socket: Socket
   ) { }
 
-  getMedia(media: string, clip?: string) {
+  public getMedia(media: string, clip?: string) {
     let mediaObj = {};
-    this.uid = this.getUID();
-    mediaObj["uid"] = this.uid;
 
     if (clip) {
-
       console.log("Clip ->", clip);
-      console.log("UID ->", this.uid);
 
       mediaObj["data"] = clip;
 
+      mediaObj["uid"] = this.mediaCheck(media);
+      console.log('Media Obj with clip ->', mediaObj);
+
+      this.socket.emit(media, mediaObj);
+    } else {
+      mediaObj["uid"] = this.mediaCheck(media);
+      console.log('Media Obj without clip ->', mediaObj);
+
       this.socket.emit(media, mediaObj);
     }
-    console.log('Media Obj without clip ->', mediaObj);
-
-    this.socket.emit(media, mediaObj);
   }
 
-  gotImages() {
+  public gotImages() {
     return this.socket.fromEvent("images");
   }
 
-  gotAudio() {
+  public gotAudio() {
     return this.socket.fromEvent("audioChunk");
   }
 
-  gotVideo() {
+  public gotVideo() {
     return this.socket.fromEvent("videoChunk");
+  }
+
+  private mediaCheck(media) {
+    if (media === "images") {
+      this.imageUID = this.getUID();
+      console.log("imageUID ->", this.imageUID);
+
+      return this.imageUID;
+    } else if (media === "audio") {
+      this.audioUID = this.getUID();
+      console.log("audioUID ->", this.audioUID);
+
+      return this.audioUID;
+    } else if (media === "video") {
+      this.videoUID = this.getUID();
+      console.log("videoUID ->", this.videoUID);
+
+      return this.videoUID;
+    }
   }
 
   private getUID() {

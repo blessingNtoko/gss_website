@@ -27,7 +27,23 @@ export class GalleryComponent implements OnInit {
     // });
 
     this.socket.gotAudio().subscribe(data => {
-      console.log("audio data ->", data);
+      let temp: any = data;
+
+      if (temp["files"]) {
+        if(temp["data"]) {
+          console.log("Both files and data are present");
+          console.log("Audio data ->", temp);
+        } else {
+          this.socket.getMedia("audio", temp["files"][0]);
+        }
+      }
+
+      console.log("audio data ->", temp);
+      console.log("this.socket.audioUID ->", this.socket.audioUID);
+    });
+
+    this.socket.gotVideo().subscribe(data => {
+      console.log("video data ->", data);
     });
   }
 
