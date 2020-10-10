@@ -16,14 +16,18 @@ export class GalleryComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.socket.getMedia("images");
-    // this.socket.getMedia("audio");
+    // this.socket.getMedia("images");
+    this.socket.getMedia("audio");
     // this.socket.getMedia("video");
 
-    this.socket.gotImages().subscribe(data => {
-      console.log("Data ->", data);
+    // this.socket.gotImages().subscribe(data => {
+    //   console.log("Data ->", data);
 
-      this.httpServe.imageArr.push(data);
+    //   this.httpServe.imageArr.push(data);
+    // });
+
+    this.socket.gotAudio().subscribe(data => {
+      console.log("audio data ->", data);
     });
   }
 

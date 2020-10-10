@@ -26,6 +26,7 @@ export class SocketService {
 
       this.socket.emit(media, mediaObj);
     }
+    console.log('Media Obj without clip ->', mediaObj);
 
     this.socket.emit(media, mediaObj);
   }
