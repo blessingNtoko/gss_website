@@ -39,14 +39,14 @@ export class GalleryComponent implements OnInit {
 
           if (temp["data"]) {
             console.log("Audio data ->", temp);
-            // const myVid: any = document.getElementById("myVid");
-            // const mediaSource = new MediaSource();
+            const myVid: any = document.getElementById("myVid");
+            const mediaSource = new MediaSource();
 
-            // const url = URL.createObjectURL(mediaSource);
-            // myVid.src = url;
+            const url = URL.createObjectURL(mediaSource);
+            myVid.src = url;
 
-            // const sourceBuff = mediaSource.addSourceBuffer('video/mp4; codec="avc1.64001e"');
-            // sourceBuff.appendBuffer(temp["data"]);
+            const sourceBuff = mediaSource.addSourceBuffer('video/mp4; codec="avc1.64001e"');
+            sourceBuff.appendBuffer(temp["data"]);
           }
         }
       }
