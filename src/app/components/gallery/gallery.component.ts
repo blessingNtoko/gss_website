@@ -10,6 +10,8 @@ import { SocketService } from '../../services/socket.service';
 export class GalleryComponent implements OnInit {
 
   private mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+  private bufferSize = 12;
+  private vidArray = [];
 
   constructor(
     public httpServe: HttpService,
@@ -64,12 +66,22 @@ export class GalleryComponent implements OnInit {
 
               if (temp["data"]) {
                 console.log("Video data ->", temp);
-                // const myVid: any = document.getElementById("myVid");
-                // const mediaSource = new MediaSource();
+                const myVid: any = document.getElementById("myVid");
+                const mediaSource = new MediaSource();
+                let tempArray = [];
+                tempArray.push(new Uint8Array(temp["data"]));
 
-                // myVid.src = URL.createObjectURL(mediaSource);
+                myVid.src = URL.createObjectURL(mediaSource);
 
-                // // let uint8 = new Uint8Array(temp["data"]);
+                if (tempArray.length > this.bufferSize) {
+                  let result = this.mergeArrays(tempArray);
+                  tempArray = [];
+                  console.log("Temp array ->", tempArray);
+                  this.vidArray.push(result);
+                  console.log("Result array ->", this.vidArray);
+                }
+
+                // let uint8 = new Uint8Array(temp["data"]);
                 // mediaSource.addEventListener("sourceopen", () => {
                 //   const sourceBuff = mediaSource.addSourceBuffer(this.mimeCodec);
                 //   sourceBuff.mode = "sequence";
@@ -92,12 +104,12 @@ export class GalleryComponent implements OnInit {
     });
   }
 
-  // private mergeArrays(arrays) {
-  //   let result = [];
-  //   arrays.forEach(array => {
-  //     result.push(...array);
-  //   });
-  //   return result;
-  // }
+  private mergeArrays(arrays) {
+    let result = [];
+    arrays.forEach(array => {
+      result.push(...array);
+    });
+    return result;
+  }
 
 }
