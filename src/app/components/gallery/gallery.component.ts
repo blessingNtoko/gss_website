@@ -18,7 +18,7 @@ export class GalleryComponent implements OnInit {
   ngOnInit(): void {
     // this.socket.getMedia("images");
     // this.socket.getMedia("audio");
-    this.socket.getMedia("video");
+    // this.socket.getMedia("video");
 
     this.socket.gotImages().subscribe(data => {
       console.log("Data ->", data);
@@ -39,14 +39,8 @@ export class GalleryComponent implements OnInit {
 
           if (temp["data"]) {
             console.log("Audio data ->", temp);
-            const myVid: any = document.getElementById("myVid");
-            const mediaSource = new MediaSource();
 
-            const url = URL.createObjectURL(mediaSource);
-            myVid.src = url;
 
-            const sourceBuff = mediaSource.addSourceBuffer('video/mp4; codec="avc1.64001e"');
-            sourceBuff.appendBuffer(temp["data"]);
           }
         }
       }
@@ -66,10 +60,29 @@ export class GalleryComponent implements OnInit {
 
           if (temp["data"]) {
             console.log("Video data ->", temp);
+            const myVid: any = document.getElementById("myVid");
+            const mediaSource = new MediaSource();
+
+            myVid.src = URL.createObjectURL(mediaSource);
+            mediaSource.addEventListener("sourceopen", () => {
+              const sourceBuff = mediaSource.addSourceBuffer('video/mp4; codec="avc1.64001e"');
+              sourceBuff.mode = "sequence";
+
+              sourceBuff.addEventListener("updateend", () => {
+                mediaSource.endOfStream();
+                myVid.play();
+              })
+              sourceBuff.appendBuffer(temp["data"]);
+            });
           }
         }
       }
     });
+  }
+
+  private sourceOpen(_, temp, vidTag) {
+    let mediaSource: any = this;
+
   }
 
   // private mergeArrays(arrays) {
