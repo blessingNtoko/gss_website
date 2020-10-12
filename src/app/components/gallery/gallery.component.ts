@@ -12,6 +12,7 @@ export class GalleryComponent implements OnInit {
   private mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
   private bufferSize = 12;
   private vidArray = [];
+  private tempArray = [];
 
   constructor(
     public httpServe: HttpService,
@@ -68,30 +69,33 @@ export class GalleryComponent implements OnInit {
                 console.log("Video data ->", temp);
                 const myVid: any = document.getElementById("myVid");
                 const mediaSource = new MediaSource();
-                let tempArray = [];
-                tempArray.push(new Uint8Array(temp["data"]));
+                this.tempArray.push(new Uint8Array(temp["data"]));
 
                 myVid.src = URL.createObjectURL(mediaSource);
+                try {
 
-                if (tempArray.length > this.bufferSize) {
-                  let result = this.mergeArrays(tempArray);
-                  tempArray = [];
-                  console.log("Temp array ->", tempArray);
-                  this.vidArray.push(result);
-                  console.log("Result array ->", this.vidArray);
+                  if (this.tempArray.length > this.bufferSize) {
+                    let result = this.mergeArrays(this.tempArray);
+                    this.tempArray = [];
+                    console.log("Temp array ->", this.tempArray);
+                    this.vidArray.push(result);
+                    console.log("Result array ->", this.vidArray);
+                  }
+                } catch (error) {
+                  console.error("Error when merging or pushing merged arrays into variable ->", error);
                 }
 
-                // let uint8 = new Uint8Array(temp["data"]);
-                // mediaSource.addEventListener("sourceopen", () => {
-                //   const sourceBuff = mediaSource.addSourceBuffer(this.mimeCodec);
-                //   sourceBuff.mode = "sequence";
+                let uint8 = new Uint8Array(temp["data"]);
+                mediaSource.addEventListener("sourceopen", () => {
+                  const sourceBuff = mediaSource.addSourceBuffer(this.mimeCodec);
+                  sourceBuff.mode = "sequence";
 
-                //   sourceBuff.addEventListener("updateend", () => {
-                //     // mediaSource.endOfStream();
-                //     myVid.play();
-                //   })
-                //   sourceBuff.appendBuffer(temp["data"]);
-                // });
+                  sourceBuff.addEventListener("updateend", () => {
+                    // mediaSource.endOfStream();
+                    myVid.play();
+                  })
+                  sourceBuff.appendBuffer(temp["data"]);
+                });
               }
             } catch (error) {
               console.error("Error in media source or source buffer ->", error);
@@ -105,11 +109,16 @@ export class GalleryComponent implements OnInit {
   }
 
   private mergeArrays(arrays) {
-    let result = [];
-    arrays.forEach(array => {
-      result.push(...array);
-    });
-    return result;
+    try {
+
+      let result = [];
+      arrays.forEach(array => {
+        result.push(...array);
+      });
+      return result;
+    } catch (error) {
+      console.error("Error when merging arrays ->", error);
+    }
   }
 
 }
