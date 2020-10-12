@@ -48,41 +48,45 @@ export class GalleryComponent implements OnInit {
     });
 
     this.socket.gotVideo().subscribe(data => {
-      let temp: any = data;
+      try {
 
-      if (temp["uid"]) {
-        if (temp["uid"] === this.socket.videoUID) {
-          console.log("this.socket.videoUID ->", this.socket.videoUID);
+        let temp: any = data;
 
-          if (temp["files"]) {
-            this.socket.getMedia("video", temp["files"][0]);
-          }
+        if (temp["uid"]) {
+          if (temp["uid"] === this.socket.videoUID) {
+            console.log("this.socket.videoUID ->", this.socket.videoUID);
 
-          if (temp["data"]) {
-            console.log("Video data ->", temp);
-            const myVid: any = document.getElementById("myVid");
-            const mediaSource = new MediaSource();
+            if (temp["files"]) {
+              this.socket.getMedia("video", temp["files"][0]);
+            }
+            try {
 
-            myVid.src = URL.createObjectURL(mediaSource);
-            mediaSource.addEventListener("sourceopen", () => {
-              const sourceBuff = mediaSource.addSourceBuffer('video/mp4; codec="avc1.64001e"');
-              sourceBuff.mode = "sequence";
+              if (temp["data"]) {
+                console.log("Video data ->", temp);
+                const myVid: any = document.getElementById("myVid");
+                const mediaSource = new MediaSource();
 
-              sourceBuff.addEventListener("updateend", () => {
-                mediaSource.endOfStream();
-                myVid.play();
-              })
-              sourceBuff.appendBuffer(temp["data"]);
-            });
+                myVid.src = URL.createObjectURL(mediaSource);
+                mediaSource.addEventListener("sourceopen", () => {
+                  const sourceBuff = mediaSource.addSourceBuffer('video/mp4; codec="avc1.64001e"');
+                  sourceBuff.mode = "sequence";
+
+                  sourceBuff.addEventListener("updateend", () => {
+                    mediaSource.endOfStream();
+                    myVid.play();
+                  })
+                  sourceBuff.appendBuffer(temp["data"]);
+                });
+              }
+            } catch (error) {
+              console.error("Error inmedia source or source buffer ->", error);
+            }
           }
         }
+      } catch (error) {
+        console.error("Error in subscribe ->", error);
       }
     });
-  }
-
-  private sourceOpen(_, temp, vidTag) {
-    let mediaSource: any = this;
-
   }
 
   // private mergeArrays(arrays) {
