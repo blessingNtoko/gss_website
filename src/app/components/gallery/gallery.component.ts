@@ -94,7 +94,7 @@ export class GalleryComponent implements OnInit {
                     // mediaSource.endOfStream();
                     myVid.play();
                   })
-                  sourceBuff.appendBuffer(temp["data"]);
+                  sourceBuff.appendBuffer(this.vidArray.shift());
                 });
               }
             } catch (error) {
