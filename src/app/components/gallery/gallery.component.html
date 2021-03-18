@@ -1,4 +1,6 @@
 <h2>Images</h2>
-<div class="images" *ngFor="let image of imgArray">
-  <img src="{{ image.data }}" alt="image">
+<div class="imgContain">
+  <div class="gridItem" *ngFor="let image of imgArray">
+    <img src="{{ image.data }}" alt="image">
+  </div>
 </div>

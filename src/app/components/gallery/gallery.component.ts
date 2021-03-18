@@ -21,6 +21,10 @@ export class GalleryComponent implements OnInit {
       console.log("Data ->", data);
 
       this.imgArray.push(data);
+
+      window.addEventListener('reload', () => {
+        console.log("Reloaded");
+      });
     });
 
   }
